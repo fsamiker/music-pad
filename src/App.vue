@@ -1,14 +1,16 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <MusicPad></MusicPad>
   </div>
 </template>
 
 <script>
+import MusicPad from './components/MusicPad'
 
 export default {
   name: 'App',
   components: {
+    MusicPad
   }
 }
 </script>
@@ -18,8 +20,11 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: grid;
+  place-items: center;
   text-align: center;
+  height: 100vh;
   color: #2c3e50;
-  margin-top: 60px;
+  background-color: #a3def8;
 }
 </style>
