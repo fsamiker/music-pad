@@ -1,8 +1,8 @@
 <template>
   <label>
     <button class=" sound-btn btn"
-    @click="$emit('play', keyTrigger[0])"
-    v-bind:id = "keyTrigger[1]">
+    @click="playSound"
+    v-bind:id = "keyTrigger[0] + keyTrigger[1]">
       <span> {{ keyTrigger[0] }} </span>
     </button>
   </label>
@@ -11,7 +11,29 @@
 <script>
 export default {
   name: 'SoundButton',
-  props: ['keyTrigger'],
+  props: ['keyTrigger', 'soundData', 'volume'],
+  data: function() {
+    return {
+      audio: null
+    };
+  },
+  mounted: function() {
+    this.audio = new Audio(this.soundData.url);
+    this.changeVolume();
+  },
+  watch: {
+    volume: function() {
+      this.changeVolume();
+    }
+  },
+  methods: {
+    playSound: function() {
+      this.audio.play();
+    },
+    changeVolume: function() {
+      this.audio.volume = this.volume/100;
+    }
+  }
 }
 </script>
 

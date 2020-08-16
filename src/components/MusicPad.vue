@@ -4,31 +4,44 @@
     <div class="sounds" 
       v-if="soundOptions">
       <SoundButton
-      v-for="k in keyOptions"
-      :key="k[1]"
-      :keyTrigger="k"
-      @play="playSound"
+        v-for="k in keyOptions"
+        :key="soundMap[k[0]].id"
+        :keyTrigger="k"
+        :soundData="soundMap[k[0]]"
+        :volume="volume"
       ></SoundButton>
+    </div>
+    <div class="Settings">
+      <VolumeSlider v-model="volume"></VolumeSlider>
+      <select v-model="currentSet" v-on:change="updateSoundSet">
+        <option v-for="option in setOptions" v-bind:key="option.name" v-bind:value="option.value">
+          {{ option.name }}
+        </option>
+      </select>
     </div>
   </div>
 </template>
 
 <script>
 import SoundButton from './SoundButton'
+import VolumeSlider from './VolumeSlider'
 
 export default {
   name: 'MusicPad',
   components: {
-    SoundButton
+    SoundButton,
+    VolumeSlider
   },
   data: function() {
       return {
-        defaultSets: {
-          'Drums 1':[0, 1, 2, 3, 4, 5, 6, 7, 8],
-          'Drums 2': [9, 10, 11, 12, 13, 14, 15, 16, 17] },
+        setOptions: [
+          {'name': 'Heater Kit', 'value': [0, 1, 2, 3, 4, 5, 6, 7, 8]},
+          {'name': 'Smooth Piano Kit', 'value': [9, 10, 11, 12, 13, 14, 15, 16, 17]}
+        ],
         keyOptions: Object.entries(require('./../keys.json').keys),
         soundOptions: null,
-        currentSet: null
+        currentSet: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        volume: 50
       };
   },
   computed: {
@@ -43,29 +56,19 @@ export default {
   },
   created: function() {
       this.soundOptions = this.loadSoundOptions();
-      this.currentSet = this.defaultSets['Drums 1'];
   },
   mounted: function() {
     window.addEventListener('keydown', e => {
-      this.playSound(e.key.toUpperCase());
+      document.querySelector(`#${e.key}${e.keyCode}`.toUpperCase()).click();
     });
   },
   methods: {
       loadSoundOptions: function() {
           return require('./../sound.json').soundSamples;
       },
-      updateSoundSet: function(option) {
-        this.currentSet = this.defaultSets[option];
-      },
-      randomSet: function() {
-
-      },
-      playSound: function(key) {
-        if (key) {
-          let sound = this.soundMap[key].url;
-          var audio = new Audio(sound);
-          audio.play();
-        }
+      updateSoundSet: function(e) {
+        this.currentSet.splice(0, this.currentSet.length);
+        this.currentSet.push(...e.target.value.split(","));
       }
   }
 }
@@ -93,5 +96,10 @@ h1 {
   grid-template-rows: repeat(3, 1fr);
   height: 100%;
   width: 100%;
+}
+
+.settings {
+  grid-column: 4;
+  grid-row: 2/ span 3;
 }
 </style>
