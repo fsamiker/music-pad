@@ -1,6 +1,8 @@
 <template>
   <div class="pad">
-    <h1>EPIC MUSIC PAD</h1>
+    <div class='status-display'>
+      <h2> {{ statusMessage }} </h2>
+    </div>
     <div class="sounds" 
       v-if="soundOptions">
       <SoundButton
@@ -9,6 +11,7 @@
         :keyTrigger="k"
         :soundData="soundMap[k[0]]"
         :volume="volume"
+        v-on:message="updateStatus"
       ></SoundButton>
     </div>
     <div class="Settings">
@@ -41,7 +44,8 @@ export default {
         keyOptions: Object.entries(require('./../keys.json').keys),
         soundOptions: null,
         currentSet: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        volume: 50
+        volume: 50,
+        statusMessage: 'SOUND PAD'
       };
   },
   computed: {
@@ -62,6 +66,11 @@ export default {
       document.querySelector(`#${e.key}${e.keyCode}`.toUpperCase()).click();
     });
   },
+  watch: {
+    volume: function() {
+      this.statusMessage = `Volume: ${this.volume}`;
+    }
+  },
   methods: {
       loadSoundOptions: function() {
           return require('./../sound.json').soundSamples;
@@ -69,6 +78,9 @@ export default {
       updateSoundSet: function(e) {
         this.currentSet.splice(0, this.currentSet.length);
         this.currentSet.push(...e.target.value.split(","));
+      },
+      updateStatus: function(message) {
+        this.statusMessage = message;
       }
   }
 }
@@ -84,7 +96,7 @@ export default {
     background-color: white;
 }
 
-h1 {
+.status-display {
     grid-column: 1 / span 4;
 }
 

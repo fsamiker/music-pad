@@ -29,6 +29,7 @@ export default {
   methods: {
     playSound: function() {
       this.audio.play();
+      this.$emit('message', `Played: ${this.soundData.id}`);
     },
     changeVolume: function() {
       this.audio.volume = this.volume/100;
