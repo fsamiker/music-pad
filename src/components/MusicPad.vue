@@ -11,7 +11,8 @@
         :keyTrigger="k"
         :soundData="soundMap[k[0]]"
         :volume="volume"
-        v-on:message="updateStatus"
+        @message="updateStatus"
+        @record="recordSounds"
       ></SoundButton>
     </div>
     <div class="Settings">
@@ -21,6 +22,15 @@
           {{ option.name }}
         </option>
       </select>
+    </div>
+    <div class="recorder">
+      <button @click="recording = !recording">Record</button>
+      <button v-if="!play" @click="playRecording" :disabled="recordedSounds.length == 0">Play</button>
+      <button v-if="play" @click="play=!play">Stop</button>
+      <button @click="recordedSounds=[]">Clear</button>
+      <ul id="record-sequence">
+        <li v-for="(s, i) in recordedSounds" :key="i+s"> {{ s }} </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -45,7 +55,11 @@ export default {
         soundOptions: null,
         currentSet: [0, 1, 2, 3, 4, 5, 6, 7, 8],
         volume: 50,
-        statusMessage: 'SOUND PAD'
+        statusMessage: 'SOUND PAD',
+        recordedSounds: [],
+        recording: false,
+        play:false,
+        maxRecordLength: 50,
       };
   },
   computed: {
@@ -81,6 +95,28 @@ export default {
       },
       updateStatus: function(message) {
         this.statusMessage = message;
+      },
+      recordSounds: function(key) {
+        if (this.recordedSounds.length > this.maxRecordLength) {
+          this.updateStatus('Reached Maximum Recording Length: ' + this.maxRecordLength);
+        }
+        else if (this.recording) {
+          this.recordedSounds.push(key);
+        }
+      },
+      playRecording: function() {
+        // Disable recording to prevent infinite loop
+        const currentRecordState = this.recording;
+        this.recording = false;
+        this.play = !this.play;
+        for (var i = 0; i < this.recordedSounds.length; i++) {
+          if (!this.play) {
+            break
+          }
+          document.querySelector(`#${this.recordedSounds[i]}`.toUpperCase()).click();
+        }
+        this.recording = currentRecordState;
+        this.play = !this.play;
       }
   }
 }
@@ -90,7 +126,7 @@ export default {
 .pad {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
     height: 400px;
     width: 500px;
     background-color: white;
@@ -106,12 +142,25 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  height: 100%;
-  width: 100%;
 }
 
 .settings {
   grid-column: 4;
   grid-row: 2/ span 3;
+}
+
+.recorder {
+  grid-column: 1 / span 4;
+  grid-row: 5;
+}
+
+ul {
+  overflow: auto;
+  width: 400px;
+  white-space: nowrap;
+}
+
+ul#record-sequence li{
+  display: inline;
 }
 </style>

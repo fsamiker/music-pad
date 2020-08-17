@@ -30,6 +30,7 @@ export default {
     playSound: function() {
       this.audio.play();
       this.$emit('message', `Played: ${this.soundData.id}`);
+      this.$emit('record', this.keyTrigger[0] + this.keyTrigger[1]);
     },
     changeVolume: function() {
       this.audio.volume = this.volume/100;
@@ -43,6 +44,6 @@ export default {
   background-color: red;
   text-align: center;
   padding: 20px;
-  margin: 20px;
+  margin: 5px;
 }
 </style>
