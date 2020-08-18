@@ -30,7 +30,7 @@ export default {
     playSound: function() {
       this.audio.play();
       this.$emit('message', `Played: ${this.soundData.id}`);
-      this.$emit('record', this.keyTrigger[0] + this.keyTrigger[1]);
+      this.$emit('record', this.keyTrigger[0] + this.keyTrigger[1], this.soundData.url);
     },
     changeVolume: function() {
       this.audio.volume = this.volume/100;

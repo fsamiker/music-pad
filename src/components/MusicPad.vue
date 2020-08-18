@@ -25,7 +25,8 @@
     </div>
     <div class="recorder">
       <button @click="recording = !recording">Record</button>
-      <button v-if="!play" @click="playRecording" :disabled="recordedSounds.length == 0">Play</button>
+      <button v-if="!play" @click="playRecording" :disabled="recordedSounds.length == 0"
+        @stop="play=!play">Play</button>
       <button v-if="play" @click="play=!play">Stop</button>
       <button @click="recordedSounds=[]">Clear</button>
       <ul id="record-sequence">
@@ -60,6 +61,7 @@ export default {
         recording: false,
         play:false,
         maxRecordLength: 50,
+        recordedAudio: []
       };
   },
   computed: {
@@ -96,27 +98,37 @@ export default {
       updateStatus: function(message) {
         this.statusMessage = message;
       },
-      recordSounds: function(key) {
+      recordSounds: function(key, audioUrl) {
         if (this.recordedSounds.length > this.maxRecordLength) {
           this.updateStatus('Reached Maximum Recording Length: ' + this.maxRecordLength);
         }
         else if (this.recording) {
           this.recordedSounds.push(key);
+          this.recordedAudio.push(audioUrl)
         }
       },
       playRecording: function() {
-        // Disable recording to prevent infinite loop
-        const currentRecordState = this.recording;
-        this.recording = false;
         this.play = !this.play;
-        for (var i = 0; i < this.recordedSounds.length; i++) {
-          if (!this.play) {
-            break
+        var audio = new Audio(this.recordedAudio[0]);
+        var i = 1;
+
+        audio.play();
+        // Use arrow function perserves "this" object scope
+        audio.onended = () => {
+          if (i < this.recordedAudio.length & this.play==true) {
+            audio.src = this.recordedAudio[i];
+            audio.play();
+            i++
           }
-          document.querySelector(`#${this.recordedSounds[i]}`.toUpperCase()).click();
+          else if (this.play == true) {
+            this.play = !this.play;
+          }
         }
-        this.recording = currentRecordState;
-        this.play = !this.play;
+
+      },
+      clearRecording: function() {
+        this.recordedAudio = [];
+        this.recordSounds = [];
       }
   }
 }
