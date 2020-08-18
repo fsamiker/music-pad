@@ -6,10 +6,9 @@
     <div class="sounds" 
       v-if="soundOptions">
       <SoundButton
-        v-for="k in keyOptions"
-        :key="soundMap[k[0]].id"
-        :keyTrigger="k"
-        :soundData="soundMap[k[0]]"
+        v-for="item in soundMap"
+        :key="item.sound.id"
+        :buttonData="item"
         :volume="volume"
         @message="updateStatus"
         @record="recordSounds"
@@ -25,7 +24,7 @@
     </div>
     <div class="recorder">
       <div class="controls">
-        <button @click="recording = !recording" class="record">
+        <button @click="recording = !recording" class="record" :class="{'red': recording, 'black': !recording}">
           <i class="fas fa-circle"></i>
         </button>
         <button v-show="!play" @click="playRecording" :disabled="recordedSounds.length == 0"
@@ -64,6 +63,7 @@ export default {
         ],
         keyOptions: Object.entries(require('./../keys.json').keys),
         soundOptions: null,
+        colorOptions: ["#ff9f9f", "#ffaebe", "#f4c181", "#fbf690", "#a5f9e1", "#9ae397", "	#8fa8ec", "#ddb6ff", "#31374f"],
         currentSet: [0, 1, 2, 3, 4, 5, 6, 7, 8],
         volume: 50,
         statusMessage: 'SOUND PAD',
@@ -76,10 +76,14 @@ export default {
   },
   computed: {
     soundMap: function() {
-      let map = {};
+      let map = [];
       var i;
       for (i = 0; i < this.currentSet.length; i++) {
-        map[this.keyOptions[i][0]] = this.soundOptions[this.currentSet[i]]
+        map.push({
+          'key': this.keyOptions[i], 
+          'sound': this.soundOptions[this.currentSet[i]],
+          'color': this.colorOptions[i]
+          });
       }
       return map;
     }
@@ -226,8 +230,12 @@ ul#record-sequence li{
   margin: 0 10px 0 10px;
 }
 
-button.record {
+button.red {
   color: #8B0000;
+}
+
+button.black {
+  color: black;
 }
 
 ul#record-sequence {

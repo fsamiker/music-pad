@@ -2,7 +2,8 @@
   <label>
     <button class=" sound-btn btn"
     @click="playSound"
-    v-bind:id = "keyTrigger[0] + keyTrigger[1]">
+    v-bind:id = "buttonData.key[0] + buttonData.key[1]"
+    :style="cssStyle">
       <span></span>
     </button>
   </label>
@@ -11,14 +12,21 @@
 <script>
 export default {
   name: 'SoundButton',
-  props: ['keyTrigger', 'soundData', 'volume'],
+  props: ['buttonData', 'volume'],
   data: function() {
     return {
       audio: null
     };
   },
+  computed: {
+    cssStyle: function() {
+      return {
+        '--active-color': this.buttonData.color
+      }
+    }
+  },
   mounted: function() {
-    this.audio = new Audio(this.soundData.url);
+    this.audio = new Audio(this.buttonData.sound.url);
     this.changeVolume();
   },
   watch: {
@@ -29,8 +37,8 @@ export default {
   methods: {
     playSound: function() {
       this.audio.play();
-      this.$emit('message', `Played: ${this.soundData.id}`);
-      this.$emit('record', this.keyTrigger[0], this.soundData.url);
+      this.$emit('message', `Played: ${this.buttonData.sound.id}`);
+      this.$emit('record', this.buttonData.key[0], this.buttonData.sound.url);
     },
     changeVolume: function() {
       this.audio.volume = this.volume/100;
@@ -52,8 +60,21 @@ label {
   padding: 20px;
   height: 100%;
   width: 100%;
+  cursor: pointer;
+  outline: none;
   border-radius: 15px;
+  border: none;
   opacity: 0.8;
-  box-shadow: 0 2px 3px 0;
+  box-shadow: 0 5px 5px 0 rgba(153, 153, 153, 0.486);
+  transition: 0s 0.25s;
 }
+
+.btn:active {
+  box-shadow: 0 5px rgba(102, 102, 102, 0.014);
+  transform: translateY(2px);
+  background-color: var(--active-color);
+  transition: 0s;
+}
+
+
 </style>
