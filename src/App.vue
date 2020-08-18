@@ -23,8 +23,8 @@ export default {
   display: grid;
   place-items: center;
   text-align: center;
-  height: 100vh;
+  height: 100%;
   color: #2c3e50;
-  background-color: #a3def8;
+  background-color: #312b2b;
 }
 </style>

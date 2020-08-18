@@ -3,7 +3,7 @@
     <button class=" sound-btn btn"
     @click="playSound"
     v-bind:id = "keyTrigger[0] + keyTrigger[1]">
-      <span> {{ keyTrigger[0] }} </span>
+      <span></span>
     </button>
   </label>
 </template>
@@ -30,7 +30,7 @@ export default {
     playSound: function() {
       this.audio.play();
       this.$emit('message', `Played: ${this.soundData.id}`);
-      this.$emit('record', this.keyTrigger[0] + this.keyTrigger[1], this.soundData.url);
+      this.$emit('record', this.keyTrigger[0], this.soundData.url);
     },
     changeVolume: function() {
       this.audio.volume = this.volume/100;
@@ -40,10 +40,20 @@ export default {
 </script>
 
 <style scoped>
+
+label {
+  height: 100%;
+  width: 100%;
+}
+
 .btn {
-  background-color: red;
+  background-color: #dbdbd5;
   text-align: center;
   padding: 20px;
-  margin: 5px;
+  height: 100%;
+  width: 100%;
+  border-radius: 15px;
+  opacity: 0.8;
+  box-shadow: 0 2px 3px 0;
 }
 </style>
