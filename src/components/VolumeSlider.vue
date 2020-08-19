@@ -43,17 +43,18 @@ export default {
 }
 
 .slidecontainer input {
-  width: 70%;
+  width: minmax(25vw, 70%);
   margin: 10px;
 }
 
 .slidecontainer button {
   padding: 0;
   text-align: center;
-  height: 30px;
-  width: 30px;
+  font-size: 0.5rem;
+  height: 1.5rem;
+  width: 1.5rem;
   background-color: grey;
-  border-radius: 10px;
+  border-radius: 0.5rem;
   border-color: #b29100;
 }
 

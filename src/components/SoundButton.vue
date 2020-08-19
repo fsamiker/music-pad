@@ -1,7 +1,7 @@
 <template>
   <label>
     <button class=" sound-btn btn"
-    @click="playSound"
+    @click="playSound(this)"
     v-bind:id = "buttonData.key[0] + buttonData.key[1]"
     :style="cssStyle">
       <span></span>
@@ -27,6 +27,7 @@ export default {
   },
   mounted: function() {
     this.audio = new Audio(this.buttonData.sound.url);
+    this.audio.preload = "auto";
     this.changeVolume();
   },
   watch: {
@@ -35,7 +36,8 @@ export default {
     }
   },
   methods: {
-    playSound: function() {
+    playSound: function(button) {
+      console.log(button);
       this.audio.play();
       this.$emit('message', `Played: ${this.buttonData.sound.id}`);
       this.$emit('record', this.buttonData.color, this.buttonData.sound.url);

@@ -126,6 +126,7 @@ export default {
       playRecording: function() {
         this.play = !this.play;
         var audio = new Audio(this.recordedAudio[0]);
+        audio.preload = "auto";
         var i = 1;
 
         audio.play();
@@ -153,11 +154,12 @@ export default {
 
 <style scoped>
 .pad {
+  position: relative;
     display: grid;
-    grid-template-columns: repeat(3, 1fr) 25%;
-    grid-template-rows: 15% repeat(3, 1fr) 15%;
-    height: clamp(600px, 80%, 750px);
-    width: clamp(600px, 80%, 750px);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 15%  10% repeat(3, 1fr) 15%;
+    height: clamp(500px, 80%, 800px);
+    width: clamp(300px, 80%, 750px);
     background-color: #000000;
     background-image: linear-gradient(315deg, #4c4c4c 0%, #323232 65%);
     border-radius: 30px;
@@ -169,12 +171,15 @@ export default {
     grid-column: 1 / span 3;
     display: grid;
     place-items: center;
-    padding-top: 20px;
+    padding-top: 2vh;
+    height: 80%;
 }
 
 .status-display h2 {
   font-family: 'Rajdhani', sans-serif;
-  height: calc(100% - 20px);
+  font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+  line-height: calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1600 - 300)));
+  height: 80%;
   width: 70%;
   margin: 0;
   background-color: grey;
@@ -189,7 +194,7 @@ export default {
   gap: 10px;
   margin: 30px;
   grid-column: 1 / span 3;
-  grid-row: 2 / span 3;
+  grid-row: 3 / span 3;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -198,23 +203,23 @@ export default {
 
 .settings {
   display: grid;
-  grid-column: 4;
-  grid-row: 2 / span 3;
+  grid-template-columns: 1fr 1fr;
+  white-space: nowrap;
+  grid-column: 1 / span 3;
+  grid-row: 2;
   place-items: center;
-  margin: 40% 20% 40% 0;
-
+  margin: 2vh 1vw 1vh 1vw;
 }
 
 .recorder {
   grid-column: 1 / span 3;
-  grid-row: 5;
+  grid-row: 6;
   display: grid;
   place-items: center;
 }
 
 div#record-sequence {
   overflow: auto;
-  width: 400px;
   white-space: nowrap;
   height: 60%;
 }
@@ -235,12 +240,13 @@ ul li{
 .recorder button {
   padding: 0;
   text-align: center;
-  height: 30px;
-  width: 30px;
+  height: 1.5rem;
+  width: 1.5rem;
   background-color: grey;
-  border-radius: 10px;
+  border-radius: 0.5rem;
   border-color: #b29100;
   margin: 0 10px 0 10px;
+  font-size: 0.5rem;
 }
 
 button.red {
@@ -254,7 +260,8 @@ button.black {
 select {
   font-family: 'Rajdhani', sans-serif;
   font-weight: bold;
-  font-size: 20px;
+  font-size: calc(8px + (16 - 8) * ((100vw - 300px) / (1600 - 300)));
+  line-height: calc(1.3em + (1.5 - 1.2) * ((100vw - 300px)/(1600 - 300)));
   color: black;
   border: 0;
   padding: 2px;
