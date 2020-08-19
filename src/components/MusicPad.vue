@@ -27,20 +27,22 @@
         <button @click="recording = !recording" class="record" :class="{'red': recording, 'black': !recording}">
           <i class="fas fa-circle"></i>
         </button>
-        <button v-show="!play" @click="playRecording" :disabled="recordedSounds.length == 0"
+        <button v-show="!play" @click="playRecording" :disabled="recordedColors.length == 0"
           @stop="play=!play" class="play">
           <i class="fas fa-play"></i>
         </button>
         <button v-show="play" @click="play=!play" class="stop">
           <i class="fas fa-stop"></i>
         </button>
-        <button @click="recordedSounds=[]" class="clear">
+        <button @click="clearRecording" class="clear" :disabled="recordedColors.length == 0">
           <i class="fas fa-minus-circle"></i>
         </button>
       </div>
-      <ul id="record-sequence">
-        <li v-for="(s, i) in recordedSounds" :key="i+s"> {{ s }} </li>
-      </ul>
+      <div id="record-sequence" class="table">
+        <ul>
+          <li v-for="(s, i) in recordedColors" :key="i+s" :style="{'background-color': s}"></li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -67,7 +69,7 @@ export default {
         currentSet: [0, 1, 2, 3, 4, 5, 6, 7, 8],
         volume: 50,
         statusMessage: 'SOUND PAD',
-        recordedSounds: [],
+        recordedColors: [],
         recording: false,
         play:false,
         maxRecordLength: 50,
@@ -112,12 +114,12 @@ export default {
       updateStatus: function(message) {
         this.statusMessage = message;
       },
-      recordSounds: function(key, audioUrl) {
-        if (this.recordedSounds.length > this.maxRecordLength) {
-          this.updateStatus('Reached Maximum Recording Length: ' + this.maxRecordLength);
+      recordSounds: function(color, audioUrl) {
+        if (this.recordedColors.length > this.maxRecordLength) {
+          this.updateStatus('Maximum Recording Length: ' + this.maxRecordLength);
         }
         else if (this.recording) {
-          this.recordedSounds.push(key);
+          this.recordedColors.push(color);
           this.recordedAudio.push(audioUrl)
         }
       },
@@ -142,7 +144,8 @@ export default {
       },
       clearRecording: function() {
         this.recordedAudio = [];
-        this.recordSounds = [];
+        this.recordedColors = [];
+        this.updateStatus('Cleared Recording');
       }
   }
 }
@@ -209,14 +212,24 @@ export default {
   place-items: center;
 }
 
-ul {
+div#record-sequence {
   overflow: auto;
   width: 400px;
   white-space: nowrap;
+  height: 60%;
 }
 
-ul#record-sequence li{
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul li{
   display: inline;
+  color: black;
+  padding: 2px;
+  margin: 1px;
 }
 
 .recorder button {
@@ -236,13 +249,6 @@ button.red {
 
 button.black {
   color: black;
-}
-
-ul#record-sequence {
-  margin: 0;
-  border-style: thin;
-  border-color:black;
-  height: 50px;
 }
 
 select {

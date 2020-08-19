@@ -38,7 +38,7 @@ export default {
     playSound: function() {
       this.audio.play();
       this.$emit('message', `Played: ${this.buttonData.sound.id}`);
-      this.$emit('record', this.buttonData.key[0], this.buttonData.sound.url);
+      this.$emit('record', this.buttonData.color, this.buttonData.sound.url);
     },
     changeVolume: function() {
       this.audio.volume = this.volume/100;
@@ -75,6 +75,4 @@ label {
   background-color: var(--active-color);
   transition: 0s;
 }
-
-
 </style>

@@ -6,7 +6,7 @@
       <button v-show="volumeValue == 0" class="volume-btn" @click="mute">
         <i class="fas fa-volume-mute"></i>
       </button>
-      <input type="range" min="1" max="100" class="slider" id="soundVolume"
+      <input type="range" min="0" max="100" class="slider" id="soundVolume"
           v-bind:value="volumeValue"
           v-on:input="$emit('input', $event.target.value)">
     </div>
